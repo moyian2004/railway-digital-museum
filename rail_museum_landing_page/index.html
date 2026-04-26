@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Rail Museum - 开源数字化轨道交通博物馆</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sky: { 50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1' },
+            slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    
+    @keyframes train-move {
+      0% { transform: translateX(-20%); }
+      100% { transform: translateX(105%); }
+    }
+    .train-animation { animation: train-move 7s linear infinite; }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-on-scroll { opacity: 0; }
+    .animate-on-scroll.visible { animation: fadeInUp 0.7s ease-out forwards; }
+    
+    .gradient-text {
+      background: linear-gradient(to right, #0f172a, #0ea5e9, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    ::selection { background: #bae6fd; color: #0f172a; }
+    
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#f5f5f7] text-slate-900">
+  <div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute inset-0" style="background: radial-gradient(circle_at_20%_0%,rgba(56,189,248,0.08),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(59,130,246,0.06),transparent_22%),linear-gradient(180deg,#f8fafc_0%,#f5f5f7_38%,#eef2f7_100%)"></div>
+    <div class="absolute left-1/2 top-0 h-full w-full max-w-7xl -translate-x-1/2 opacity-[0.22]" style="background-image:linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px);background-size:72px 72px"></div>
+    <div class="absolute inset-x-0 top-0 h-px" style="background:linear-gradient(to right,transparent,rgba(56,189,248,0.5),transparent)"></div>
+    <div class="absolute left-[8%] top-[16%] h-44 w-44 rounded-full bg-sky-200/40 blur-3xl"></div>
+    <div class="absolute right-[10%] top-[12%] h-56 w-56 rounded-full bg-blue-200/35 blur-3xl"></div>
+  </div>
+
+  <header class="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <i class="fa-solid fa-train-front text-sky-600 text-xl"></i>
+        </div>
+        <div>
+          <div class="text-sm font-medium uppercase tracking-[0.22em] text-slate-700">Open Rail Museum</div>
+          <div class="text-xs text-slate-500">开源数字化轨道交通博物馆</div>
+        </div>
+      </div>
+      <nav class="hidden items-center gap-8 text-sm text-slate-600 lg:flex">
+        <a href="#overview" class="transition hover:text-slate-950">项目概览</a>
+        <a href="#timeline" class="transition hover:text-slate-950">叙事时间轴</a>
+        <a href="#galleries" class="transition hover:text-slate-950">数字展区</a>
+        <a href="#opensource" class="transition hover:text-slate-950">开源共建</a>
+        <a href="#vision" class="transition hover:text-slate-950">项目愿景</a>
+      </nav>
+      <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+        联系项目
+        <i class="fa-solid fa-chevron-right text-xs"></i>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="relative overflow-hidden">
+      <div class="mx-auto grid min-h-[96vh] max-w-7xl items-center gap-14 px-6 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
+        <div class="animate-on-scroll" style="animation-delay:0.1s">
+          <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm">
+            <i class="fa-solid fa-sparkles text-xs"></i>
+            数字展陈 · 轨道交通科普 · 开源共建
+          </div>
+          <h1 class="mt-8 max-w-5xl text-5xl font-semibold leading-[1.02] tracking-tight text-slate-950 md:text-7xl xl:text-[84px]">
+            让轨道交通知识
+            <span class="block gradient-text">以数字展馆的方式被重新看见</span>
+          </h1>
+          <p class="mt-8 max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">
+            这是一个融合数字展陈、知识可视化、公众科普与开源协作的轨道交通数字博物馆项目。
+            它不是信息的堆砌，而是一种更具叙事感、浏览感与公共价值的专业表达方式。
+          </p>
+          <div class="mt-10 flex flex-wrap items-center gap-4">
+            <a href="#overview" class="group inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3.5 text-sm font-medium text-white shadow-lg transition hover:scale-[1.02]" style="box-shadow:0 18px 40px rgba(15,23,42,0.14)">
+              开始展馆导览
+              <i class="fa-solid fa-arrow-right text-xs transition group-hover:translate-x-0.5"></i>
+            </a>
+            <a href="#opensource" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm text-slate-900 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+              查看开源共建
+              <i class="fa-brands fa-github text-sm"></i>
+            </a>
+          </div>
+          <div class="mt-14 grid max-w-3xl grid-cols-2 gap-4 md:grid-cols-4">
+            <div class="rounded-[1.6rem] border border-slate-200 bg-white/85 px-5 py-5 shadow-sm backdrop-blur-sm">
+              <div class="text-2xl font-semibold text-slate-950">01</div>
+              <div class="mt-2 text-sm leading-6 text-slate-500">统一知识入口</div>
+            </div>
+            <div class="rounded-[1.6rem] border border-slate-200 bg-white/85 px-5 py-5 shadow-sm backdrop-blur-sm">
+              <div class="text-2xl font-semibold text-slate-950">04</div>
+              <div class="mt-2 text-sm leading-6 text-slate-500">核心数字展区</div>
+            </div>
+            <div class="rounded-[1.6rem] border border-slate-200 bg-white/85 px-5 py-5 shadow-sm backdrop-blur-sm">
+              <div class="text-2xl font-semibold text-slate-950">24/7</div>
+              <div class="mt-2 text-sm leading-6 text-slate-500">在线开放展示</div>
+            </div>
+            <div class="rounded-[1.6rem] border border-slate-200 bg-white/85 px-5 py-5 shadow-sm backdrop-blur-sm">
+              <div class="text-2xl font-semibold text-slate-950">Open</div>
+              <div class="mt-2 text-sm leading-6 text-slate-500">持续共建机制</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="animate-on-scroll relative" style="animation-delay:0.2s">
+          <div class="absolute -inset-6 rounded-[2.2rem]" style="background:linear-gradient(to bottom right,rgba(192,235,254,0.5),rgba(191,219,254,0.4),transparent);filter:blur(24px)"></div>
+          <div class="relative overflow-hidden rounded-[2.2rem] border border-slate-200 bg-white/85 p-4 backdrop-blur-xl" style="box-shadow:0 24px 80px rgba(15,23,42,0.08)">
+            <div class="rounded-[1.75rem] border border-slate-200 bg-[#fbfbfd] p-5">
+              <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                <div>
+                  <div class="text-xs uppercase tracking-[0.26em] text-sky-700">Museum Interface</div>
+                  <div class="mt-2 text-xl font-medium text-slate-950">数字展馆导览总览</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-sky-400"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-blue-400"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-slate-300"></span>
+                </div>
+              </div>
+              <div class="mt-5 space-y-4">
+                <div class="grid gap-4 md:grid-cols-[1.12fr_0.88fr]">
+                  <div class="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-gradient-to-br from-sky-50 via-white to-blue-50 p-6">
+                    <div class="text-xs uppercase tracking-[0.24em] text-sky-700">Main Narrative Hall</div>
+                    <div class="mt-4 text-3xl font-semibold text-slate-950">轨道交通数字主展厅</div>
+                    <p class="mt-4 max-w-md text-sm leading-7 text-slate-600">
+                      以时间轴、系统结构、专题内容和互动导览构成统一的展示界面，呈现更具秩序感与沉浸感的知识体验。
+                    </p>
+                    <div class="mt-8">
+                      <div class="relative h-28 w-full overflow-hidden rounded-[1.75rem] border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50">
+                        <div class="absolute inset-0" style="background:linear-gradient(90deg,transparent_0%,rgba(14,165,233,0.08)_48%,transparent_100%)"></div>
+                        <div class="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2" style="background:linear-gradient(to right,transparent,rgba(56,189,248,0.7),transparent)"></div>
+                        <div class="absolute left-[6%] right-[6%] top-1/2 h-[10px] -translate-y-1/2 rounded-full border border-sky-100 bg-sky-50"></div>
+                        <div class="absolute left-[8%] right-[8%] top-1/2 flex -translate-y-1/2 justify-between px-1">
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                          <span class="h-3 w-[3px] rounded-full bg-slate-300"></span>
+                        </div>
+                        <div class="train-animation absolute top-1/2 -translate-y-1/2" style="animation:train-move 7s linear infinite">
+                          <div class="flex h-10 items-center gap-1 rounded-full border border-slate-200 bg-white px-3 shadow-lg">
+                            <i class="fa-solid fa-train-front text-sky-600 text-sm"></i>
+                            <div class="h-2.5 w-8 rounded-full bg-sky-100"></div>
+                            <div class="h-2.5 w-8 rounded-full bg-sky-100"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="space-y-4">
+                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                      <div class="text-xs uppercase tracking-[0.22em] text-slate-500">Exhibition Navigation</div>
+                      <div class="mt-2 text-lg font-medium text-slate-950">展区导航</div>
+                      <div class="mt-4 grid grid-cols-2 gap-2 text-sm text-slate-600">
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">发展历程</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">列车结构</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">关键技术</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">互动科普</div>
+                      </div>
+                    </div>
+                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                      <div class="text-xs uppercase tracking-[0.22em] text-slate-500">Public Value</div>
+                      <div class="mt-2 text-lg font-medium text-slate-950">项目价值</div>
+                      <div class="mt-4 grid grid-cols-2 gap-2 text-sm text-slate-600">
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">专业传播</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">科普展示</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">高校展示</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">开源共建</div>
+                      </div>
+                    </div>
+                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                      <div class="text-xs uppercase tracking-[0.22em] text-slate-500">Platform Capability</div>
+                      <div class="mt-2 text-lg font-medium text-slate-950">平台能力</div>
+                      <div class="mt-4 grid grid-cols-2 gap-2 text-sm text-slate-600">
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">专题策展</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">视觉讲解</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">智能问答</div>
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">持续迭代</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="overview" class="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+      <div class="animate-on-scroll max-w-3xl">
+        <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] tracking-[0.28em] uppercase text-sky-700 shadow-sm">
+          <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+          Project Overview
+        </div>
+        <h2 class="mt-5 text-3xl font-semibold leading-tight text-slate-950 md:text-5xl">它更像一座在线展馆，而不是一个普通项目页面。</h2>
+        <p class="mt-5 text-base leading-8 text-slate-600 md:text-lg">本项目尝试用高质量数字界面重新组织轨道交通知识传播方式，让访问者像走进一座现代展馆那样理解铁路发展脉络、技术结构和项目价值。</p>
+      </div>
+      <div class="mt-14 grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm" style="animation-delay:0.1s">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-sky-100 bg-sky-50 text-sky-700">
+            <i class="fa-solid fa-book text-lg"></i>
+          </div>
+          <h3 class="mt-6 text-2xl font-medium text-slate-950">为什么做</h3>
+          <p class="mt-4 text-base leading-8 text-slate-600">面对轨道交通知识内容分散、展示方式单一、公众理解门槛较高的问题，项目希望建立一个更系统、更现代、更友好的数字展示入口。</p>
+        </div>
+        <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm" style="animation-delay:0.2s">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-sky-100 bg-sky-50 text-sky-700">
+            <i class="fa-solid fa-route text-lg"></i>
+          </div>
+          <h3 class="mt-6 text-2xl font-medium text-slate-950">解决什么问题</h3>
+          <p class="mt-4 text-base leading-8 text-slate-600">通过展馆式叙事、结构化分层和开源协作机制，将历史、系统、技术与科普内容整合为一个可持续增长的知识平台。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="timeline" class="border-y border-black/5 bg-white/60 backdrop-blur-sm">
+      <div class="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+        <div class="animate-on-scroll max-w-3xl">
+          <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] tracking-[0.28em] uppercase text-sky-700 shadow-sm">
+            <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+            Narrative Timeline
+          </div>
+          <h2 class="mt-5 text-3xl font-semibold leading-tight text-slate-950 md:text-5xl">通过时间轴，建立这座数字博物馆的叙事节奏。</h2>
+          <p class="mt-5 text-base leading-8 text-slate-600 md:text-lg">滚动浏览不只是向下翻页，而是沿着项目构想、内容搭建、开放协作与公共传播逐步进入这座数字展馆的内部结构。</p>
+        </div>
+        <div class="relative mt-16">
+          <div class="absolute left-4 top-0 hidden h-full w-px bg-gradient-to-b from-sky-300 via-slate-200 to-transparent md:block"></div>
+          <div class="space-y-8">
+            <div class="animate-on-scroll grid gap-4 md:grid-cols-[120px_1fr] md:gap-8" style="animation-delay:0.1s">
+              <div class="relative pl-10 md:pl-0">
+                <div class="absolute left-0 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-sky-100 bg-white shadow-sm md:left-0">
+                  <span class="h-2.5 w-2.5 rounded-full bg-sky-500"></span>
+                </div>
+                <div class="text-sm uppercase tracking-[0.22em] text-sky-700 md:pl-12">起点</div>
+              </div>
+              <div class="rounded-[1.8rem] border border-slate-200 bg-white p-7 shadow-sm">
+                <h3 class="text-2xl font-medium text-slate-950">从"分散资料"转向"展馆叙事"</h3>
+                <p class="mt-4 text-base leading-8 text-slate-600">不再将轨道交通知识简单堆叠为文档集合，而是以数字博物馆逻辑组织发展脉络、系统结构与工程认知。</p>
+              </div>
+            </div>
+            <div class="animate-on-scroll grid gap-4 md:grid-cols-[120px_1fr] md:gap-8" style="animation-delay:0.15s">
+              <div class="relative pl-10 md:pl-0">
+                <div class="absolute left-0 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-sky-100 bg-white shadow-sm md:left-0">
+                  <span class="h-2.5 w-2.5 rounded-full bg-sky-500"></span>
+                </div>
+                <div class="text-sm uppercase tracking-[0.22em] text-sky-700 md:pl-12">阶段一</div>
+              </div>
+              <div class="rounded-[1.8rem] border border-slate-200 bg-white p-7 shadow-sm">
+                <h3 class="text-2xl font-medium text-slate-950">建立可浏览的知识主线</h3>
+                <p class="mt-4 text-base leading-8 text-slate-600">围绕铁路发展历程、列车结构、关键技术与互动科普四个维度，搭建清晰的展陈框架和访问路径。</p>
+              </div>
+            </div>
+            <div class="animate-on-scroll grid gap-4 md:grid-cols-[120px_1fr] md:gap-8" style="animation-delay:0.2s">
+              <div class="relative pl-10 md:pl-0">
+                <div class="absolute left-0 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-sky-100 bg-white shadow-sm md:left-0">
+                  <span class="h-2.5 w-2.5 rounded-full bg-sky-500"></span>
+                </div>
+                <div class="text-sm uppercase tracking-[0.22em] text-sky-700 md:pl-12">阶段二</div>
+              </div>
+              <div class="rounded-[1.8rem] border border-slate-200 bg-white p-7 shadow-sm">
+                <h3 class="text-2xl font-medium text-slate-950">引入开源协作与版本演进</h3>
+                <p class="mt-4 text-base leading-8 text-slate-600">以 GitHub 为基础建立内容贡献、页面迭代、专题更新与协同管理机制，让展馆具备长期生长能力。</p>
+              </div>
+            </div>
+            <div class="animate-on-scroll grid gap-4 md:grid-cols-[120px_1fr] md:gap-8" style="animation-delay:0.25s">
+              <div class="relative pl-10 md:pl-0">
+                <div class="absolute left-0 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-sky-100 bg-white shadow-sm md:left-0">
+                  <span class="h-2.5 w-2.5 rounded-full bg-sky-500"></span>
+                </div>
+                <div class="text-sm uppercase tracking-[0.22em] text-sky-700 md:pl-12">阶段三</div>
+              </div>
+              <div class="rounded-[1.8rem] border border-slate-200 bg-white p-7 shadow-sm">
+                <h3 class="text-2xl font-medium text-slate-950">面向公众传播与高校展示</h3>
+                <p class="mt-4 text-base leading-8 text-slate-600">形成兼顾项目展示、科普传播、课程辅助、竞赛答辩与合作交流的综合性数字门户。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galleries" class="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+      <div class="animate-on-scroll max-w-3xl">
+        <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] tracking-[0.28em] uppercase text-sky-700 shadow-sm">
+          <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+          Digital Galleries
+        </div>
+        <h2 class="mt-5 text-3xl font-semibold leading-tight text-slate-950 md:text-5xl">用清晰的展区导航，组织完整的知识地图。</h2>
+        <p class="mt-5 text-base leading-8 text-slate-600 md:text-lg">页面设置数字展区导航、主题模块与科技感信息卡片，让用户从任意入口都能迅速建立对项目结构与内容价值的整体理解。</p>
+      </div>
+      <div class="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div class="animate-on-scroll group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1" style="animation-delay:0.1s;box-shadow:0 18px 40px rgba(15,23,42,0.08)">
+          <div class="flex items-center justify-between">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-sky-700">
+              <i class="fa-solid fa-clock text-lg"></i>
+            </div>
+            <span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-slate-500">Timeline</span>
+          </div>
+          <h3 class="mt-8 text-2xl font-medium text-slate-950">发展历程展区</h3>
+          <p class="mt-4 text-base leading-8 text-slate-600">以现代时间轴叙事呈现中国铁路与轨道交通的关键节点、技术跃迁与时代图景。</p>
+          <div class="mt-8 flex items-center gap-2 text-sm text-sky-700 transition group-hover:gap-3">
+            进入展区
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </div>
+        </div>
+        <div class="animate-on-scroll group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1" style="animation-delay:0.15s;box-shadow:0 18px 40px rgba(15,23,42,0.08)">
+          <div class="flex items-center justify-between">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-sky-700">
+              <i class="fa-solid fa-layer-group text-lg"></i>
+            </div>
+            <span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-slate-500">Systems</span>
+          </div>
+          <h3 class="mt-8 text-2xl font-medium text-slate-950">列车结构展区</h3>
+          <p class="mt-4 text-base leading-8 text-slate-600">围绕车体、转向架、制动、受电弓等核心系统进行结构拆解与知识图解。</p>
+          <div class="mt-8 flex items-center gap-2 text-sm text-sky-700 transition group-hover:gap-3">
+            进入展区
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </div>
+        </div>
+        <div class="animate-on-scroll group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1" style="animation-delay:0.2s;box-shadow:0 18px 40px rgba(15,23,42,0.08)">
+          <div class="flex items-center justify-between">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-sky-700">
+              <i class="fa-solid fa-microchip text-lg"></i>
+            </div>
+            <span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-slate-500">Engineering</span>
+          </div>
+          <h3 class="mt-8 text-2xl font-medium text-slate-950">关键技术展区</h3>
+          <p class="mt-4 text-base leading-8 text-slate-600">聚焦高速列车、智能运维、控制系统、减振降噪等工程技术与应用场景。</p>
+          <div class="mt-8 flex items-center gap-2 text-sm text-sky-700 transition group-hover:gap-3">
+            进入展区
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </div>
+        </div>
+        <div class="animate-on-scroll group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1" style="animation-delay:0.25s;box-shadow:0 18px 40px rgba(15,23,42,0.08)">
+          <div class="flex items-center justify-between">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-sky-700">
+              <i class="fa-solid fa-magnifying-glass text-lg"></i>
+            </div>
+            <span class="rounded-full border border-slate-200 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-slate-500">Public Learning</span>
+          </div>
+          <h3 class="mt-8 text-2xl font-medium text-slate-950">互动科普展区</h3>
+          <p class="mt-4 text-base leading-8 text-slate-600">以图文导览、问答交互、专题卡片和多层级内容组织提升公众理解效率。</p>
+          <div class="mt-8 flex items-center gap-2 text-sm text-sky-700 transition group-hover:gap-3">
+            进入展区
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="values" class="border-y border-black/5 bg-gradient-to-b from-white/70 to-transparent">
+      <div class="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+        <div class="animate-on-scroll max-w-3xl">
+          <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] tracking-[0.28em] uppercase text-sky-700 shadow-sm">
+            <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+            Core Value
+          </div>
+          <h2 class="mt-5 text-3xl font-semibold leading-tight text-slate-950 md:text-5xl">轨道交通、数字博物馆、开源共建，是整个项目的三个中心词。</h2>
+          <p class="mt-5 text-base leading-8 text-slate-600 md:text-lg">所有视觉表达与页面结构都围绕三条主线展开：专业内容的可视化表达、数字展馆的沉浸式浏览体验，以及开源协作带来的长期增长能力。</p>
+        </div>
+        <div class="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm" style="animation-delay:0.1s">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-sky-100 bg-sky-50 text-sky-700">
+              <i class="fa-solid fa-table-cells text-lg"></i>
+            </div>
+            <h3 class="mt-7 text-2xl font-medium text-slate-950">知识可视化</h3>
+            <p class="mt-4 text-base leading-8 text-slate-600">把专业知识转化为清晰、可浏览、可感知的数字内容界面。</p>
+          </div>
+          <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm" style="animation-delay:0.15s">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-sky-100 bg-sky-50 text-sky-700">
+              <i class="fa-solid fa-images text-lg"></i>
+            </div>
+            <h3 class="mt-7 text-2xl font-medium text-slate-950">展馆化表达</h3>
+            <p class="mt-4 text-base leading-8 text-slate-600">采用数字展陈逻辑组织信息，强调空间感、层次感与浏览节奏。</p>
+          </div>
+          <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm" style="animation-delay:0.2s">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-sky-100 bg-sky-50 text-sky-700">
+              <i class="fa-brands fa-github text-lg"></i>
+            </div>
+            <h3 class="mt-7 text-2xl font-medium text-slate-950">开源共建</h3>
+            <p class="mt-4 text-base leading-8 text-slate-600">以版本控制与社区协作为基础，持续扩展专题内容和展示能力。</p>
+          </div>
+          <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm" style="animation-delay:0.25s">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-sky-100 bg-sky-50 text-sky-700">
+              <i class="fa-solid fa-shield-check text-lg"></i>
+            </div>
+            <h3 class="mt-7 text-2xl font-medium text-slate-950">公共价值</h3>
+            <p class="mt-4 text-base leading-8 text-slate-600">服务高校展示、公众科普、专业传播与知识共享的多重场景。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="opensource" class="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+      <div class="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+        <div class="animate-on-scroll" style="animation-delay:0.1s">
+          <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] tracking-[0.28em] uppercase text-sky-700 shadow-sm">
+              <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+              Open Source Collaboration
+            </div>
+            <h2 class="mt-5 text-3xl font-semibold leading-tight text-slate-950 md:text-5xl">把这座数字博物馆建成一个可以长期共建的项目。</h2>
+            <p class="mt-5 text-base leading-8 text-slate-600 md:text-lg">项目不仅用于展示，更强调以开源方式组织协作。仓库、议题、更新记录和贡献规范共同构成内容演进机制，使项目具有持续完善和扩展的基础。</p>
+          </div>
+          <div class="mt-8 flex flex-wrap items-center gap-4">
+            <a href="https://github.com" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm text-slate-900 shadow-sm transition hover:bg-slate-50">
+              <i class="fa-brands fa-github text-sm"></i>
+              打开 GitHub 仓库
+            </a>
+            <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-sky-50 px-5 py-3 text-sm text-sky-700 transition hover:bg-sky-100">
+              参与共建
+              <i class="fa-solid fa-users text-sm"></i>
+            </a>
+          </div>
+        </div>
+        <div class="grid gap-5">
+          <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-7 shadow-sm" style="animation-delay:0.1s">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-2xl font-medium text-slate-950">仓库化内容组织</h3>
+                <p class="mt-4 text-base leading-8 text-slate-600">将页面组件、图文素材、专题文档与导览内容统一纳入版本管理，形成可追踪、可维护、可迭代的数字资产体系。</p>
+              </div>
+              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-sky-700">
+                <i class="fa-brands fa-github text-lg"></i>
+              </div>
+            </div>
+          </div>
+          <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-7 shadow-sm" style="animation-delay:0.15s">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-2xl font-medium text-slate-950">明确的贡献路径</h3>
+                <p class="mt-4 text-base leading-8 text-slate-600">通过议题、分工、提交规范与更新说明，降低新成员参与门槛，支持学生团队、志愿者与合作社群共同建设。</p>
+              </div>
+              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-sky-700">
+                <i class="fa-brands fa-github text-lg"></i>
+              </div>
+            </div>
+          </div>
+          <div class="animate-on-scroll rounded-[2rem] border border-slate-200 bg-white p-7 shadow-sm" style="animation-delay:0.2s">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-2xl font-medium text-slate-950">持续更新的专题机制</h3>
+                <p class="mt-4 text-base leading-8 text-slate-600">围绕课程、竞赛、科普活动与热点议题增加新展项，使数字博物馆具备持续上新的内容生命力。</p>
+              </div>
+              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-sky-700">
+                <i class="fa-brands fa-github text-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vision" class="border-y border-black/5 bg-white/60 backdrop-blur-sm">
+      <div class="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+        <div class="animate-on-scroll max-w-3xl">
+          <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] tracking-[0.28em] uppercase text-sky-700 shadow-sm">
+            <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+            Project Vision
+          </div>
+          <h2 class="mt-5 text-3xl font-semibold leading-tight text-slate-950 md:text-5xl">这不仅是一个网页，更是一个可持续扩展的数字文化与知识传播基础设施。</h2>
+          <p class="mt-5 text-base leading-8 text-slate-600 md:text-lg">未来可继续接入真实展项图片、项目成果、成员信息、专题目录、课程资源与智能导览接口，使其逐步成长为面向高校与社会公众的轨道交通数字展馆门户。</p>
+        </div>
+        <div class="mt-14 grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
+          <div class="animate-on-scroll rounded-[2.1rem] border border-slate-200 bg-gradient-to-br from-white via-sky-50 to-blue-50 p-8 shadow-sm md:p-10" style="animation-delay:0.1s">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-sky-100 bg-white text-sky-700">
+              <i class="fa-solid fa-orbit text-lg"></i>
+            </div>
+            <h3 class="mt-6 text-3xl font-semibold text-slate-950">面向未来的开放式数字展馆</h3>
+            <p class="mt-5 max-w-2xl text-base leading-8 text-slate-600">
+              它可以成为项目展示官网、课程辅助平台、科普传播页面、竞赛答辩展示入口，也可以进一步扩展为具有专题策展能力、数据展示能力与社区协作能力的长期平台。
+            </p>
+            <div class="mt-10 grid gap-4 sm:grid-cols-3">
+              <div class="rounded-[1.4rem] border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-sm uppercase tracking-[0.2em] text-slate-500">Scenario</div>
+                <div class="mt-3 text-lg font-medium text-slate-950">高校展示</div>
+              </div>
+              <div class="rounded-[1.4rem] border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-sm uppercase tracking-[0.2em] text-slate-500">Scenario</div>
+                <div class="mt-3 text-lg font-medium text-slate-950">公众科普</div>
+              </div>
+              <div class="rounded-[1.4rem] border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-sm uppercase tracking-[0.2em] text-slate-500">Scenario</div>
+                <div class="mt-3 text-lg font-medium text-slate-950">开放共建</div>
+              </div>
+            </div>
+          </div>
+          <div class="animate-on-scroll grid gap-6" style="animation-delay:0.15s">
+            <div class="rounded-[2rem] border border-slate-200 bg-white p-7 shadow-sm">
+              <div class="flex items-center gap-3 text-sky-700">
+                <i class="fa-solid fa-rocket text-lg"></i>
+                <span class="text-lg font-medium text-slate-950">阶段目标</span>
+              </div>
+              <p class="mt-4 text-base leading-8 text-slate-600">
+                形成兼具视觉品质、知识结构和项目表达力的高完成度官网，用于宣传展示、项目申报与成果传播。
+              </p>
+            </div>
+            <div class="rounded-[2rem] border border-slate-200 bg-white p-7 shadow-sm">
+              <div class="flex items-center gap-3 text-sky-700">
+                <i class="fa-solid fa-diagram-project text-lg"></i>
+                <span class="text-lg font-medium text-slate-950">延展方向</span>
+              </div>
+              <p class="mt-4 text-base leading-8 text-slate-600">
+                后续可接入真实数据、专题目录、图片素材、动态新闻、贡献记录和智能问答，实现更完整的数字展馆运营能力。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+      <div class="animate-on-scroll relative overflow-hidden rounded-[2.2rem] border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-sky-50 p-8 shadow-sm md:p-12" style="animation-delay:0.1s">
+        <div class="absolute -right-16 -top-16 h-52 w-52 rounded-full bg-sky-200/35 blur-3xl"></div>
+        <div class="absolute -bottom-16 -left-16 h-52 w-52 rounded-full bg-blue-200/30 blur-3xl"></div>
+        <div class="relative grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] uppercase tracking-[0.26em] text-sky-700 shadow-sm">
+              <i class="fa-solid fa-building text-xs"></i>
+              Contact
+            </div>
+            <h2 class="mt-6 max-w-3xl text-3xl font-semibold leading-tight text-slate-950 md:text-5xl">
+              让这座面向未来的轨道交通数字博物馆，继续向真实项目官网演进。
+            </h2>
+            <p class="mt-5 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">
+              当前版本已经具备高端宣传页的视觉框架与叙事结构，后续只需替换真实仓库链接、成果图片、成员信息与展项数据，即可投入展示与使用。
+            </p>
+          </div>
+          <div class="grid gap-3 text-sm text-slate-700">
+            <a href="mailto:hello@openrailmuseum.org" class="inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm transition hover:bg-slate-50">
+              <i class="fa-solid fa-envelope text-sky-700 text-sm"></i>
+              hello@openrailmuseum.org
+            </a>
+            <a href="https://github.com" class="inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm transition hover:bg-slate-50">
+              <i class="fa-brands fa-github text-sky-700 text-sm"></i>
+              GitHub / Open Rail Museum
+            </a>
+            <div class="inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+              <i class="fa-solid fa-map-marker-alt text-sky-700 text-sm"></i>
+              面向高校、公众与合作社群开放联动
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-black/5 bg-white/70 backdrop-blur-sm">
+    <div class="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-8 text-sm text-slate-500 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+      <div>
+        <div class="font-medium uppercase tracking-[0.18em] text-slate-700">Open Rail Museum</div>
+        <div class="mt-1">开源数字化轨道交通博物馆 · 数字展陈 / 科普传播 / 开源共建</div>
+      </div>
+      <div class="flex flex-wrap items-center gap-5">
+        <a href="#timeline" class="transition hover:text-slate-950">时间轴</a>
+        <a href="#galleries" class="transition hover:text-slate-950">数字展区</a>
+        <a href="#opensource" class="transition hover:text-slate-950">开源共建</a>
+        <a href="https://github.com" class="transition hover:text-slate-950">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll animation observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
