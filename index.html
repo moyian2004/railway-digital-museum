@@ -4,44 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Open Rail Museum - 开源数字化轨道交通博物馆</title>
-  <!-- 确保CDN资源加载稳定 -->
-  <script src="https://cdn.tailwindcss.com" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <!-- 优先加载稳定的CDN资源，解决样式失效问题 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <script>
-    // 简化Tailwind配置，避免语法错误
+    // 简化Tailwind配置，确保生效
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            sky: { 50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1' },
-            slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+            sky: { 
+              50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 300: '#7dd3fc', 
+              400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1' 
+            },
+            slate: { 
+              50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 
+              400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 
+              800: '#1e293b', 900: '#0f172a', 950: '#020617' 
+            }
           }
         }
       }
     }
   </script>
-  <style>
-    * { font-family: 'Inter', system-ui, sans-serif; }
+  
+  <!-- 内联核心样式，避免CDN加载问题 -->
+  <style type="text/css">
+    * { font-family: 'Inter', system-ui, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     ::selection { background: #bae6fd; color: #0f172a; }
+    
+    /* 渐变文字样式 */
     .gradient-text {
       background: linear-gradient(to right, #0f172a, #0ea5e9, #2563eb);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    /* 简化动画，避免渲染卡顿 */
+    
+    /* 渐入动画 */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fadeIn { animation: fadeInUp 0.7s ease-out forwards; }
-    /* 技术卡片跳转样式（核心新增） */
+    
+    /* 技术卡片跳转样式（核心） */
     .tech-card {
       cursor: pointer;
       position: relative;
       overflow: hidden;
+      transition: all 0.3s ease;
     }
     .tech-card::after {
       content: '';
@@ -55,9 +72,7 @@
       opacity: 0;
       transition: opacity 0.2s;
     }
-    .tech-card:hover::after {
-      opacity: 0.1;
-    }
+    .tech-card:hover::after { opacity: 0.1; }
     .tech-card .card-link {
       display: flex;
       flex-direction: column;
@@ -79,16 +94,17 @@
     }
   </style>
 </head>
+
 <body class="min-h-screen bg-[#f5f5f7] text-slate-900">
   <!-- 背景装饰 -->
   <div class="fixed inset-0 -z-10 bg-gradient-to-b from-f8fafc to-f5f5f7 opacity-100"></div>
 
-  <!-- 头部导航 -->
+  <!-- 头部导航（修复样式） -->
   <header class="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
       <div class="flex items-center gap-3">
         <div class="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <i class="fa-solid fa-train-front text-sky-600 text-xl"></i>
+          <i class="fa fa-train text-sky-600 text-xl"></i>
         </div>
         <div>
           <div class="text-sm font-medium uppercase tracking-[0.22em] text-slate-700">Open Rail Museum</div>
@@ -105,18 +121,18 @@
       </nav>
       <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
         联系项目
-        <i class="fa-solid fa-chevron-right text-xs"></i>
+        <i class="fa fa-chevron-right text-xs"></i>
       </a>
     </div>
   </header>
 
   <main>
-    <!-- 首页核心区域 -->
+    <!-- 首页核心区域（修复布局） -->
     <section class="relative overflow-hidden">
       <div class="mx-auto grid min-h-[80vh] max-w-7xl items-center gap-14 px-6 py-16 lg:grid-cols-2 lg:px-8 lg:py-24">
         <div class="animate-fadeIn">
           <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm">
-            <i class="fa-solid fa-sparkles text-xs"></i>
+            <i class="fa fa-sparkles text-xs"></i>
             数字展陈 · 轨道交通科普 · 开源共建
           </div>
           <h1 class="mt-8 max-w-5xl text-5xl font-semibold leading-[1.02] tracking-tight text-slate-950 md:text-6xl">
@@ -130,20 +146,20 @@
           <div class="mt-10 flex flex-wrap items-center gap-4">
             <a href="#overview" class="group inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3.5 text-sm font-medium text-white shadow-lg transition hover:scale-[1.02]">
               开始展馆导览
-              <i class="fa-solid fa-arrow-right text-xs transition group-hover:translate-x-0.5"></i>
+              <i class="fa fa-arrow-right text-xs transition group-hover:translate-x-0.5"></i>
             </a>
             <!-- 核心技术展厅快捷入口 -->
             <a href="#tech-gallery" class="inline-flex items-center gap-2 rounded-full bg-sky-600 px-6 py-3.5 text-sm text-white shadow-sm transition hover:bg-sky-700">
               核心技术展厅
-              <i class="fa-solid fa-microchip text-sm"></i>
+              <i class="fa fa-microchip text-sm"></i>
             </a>
             <a href="#opensource" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm text-slate-900 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
               查看开源共建
-              <i class="fa-brands fa-github text-sm"></i>
+              <i class="fa fa-github text-sm"></i>
             </a>
           </div>
         </div>
-        <!-- 右侧预览区 -->
+        <!-- 右侧预览区（修复样式） -->
         <div class="animate-fadeIn" style="animation-delay:0.2s">
           <div class="relative overflow-hidden rounded-[2.2rem] border border-slate-200 bg-white/85 p-4 backdrop-blur-xl">
             <div class="rounded-[1.75rem] border border-slate-200 bg-[#fbfbfd] p-5">
@@ -169,7 +185,7 @@
                     <div class="relative h-28 w-full overflow-hidden rounded-[1.75rem] border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50">
                       <div class="absolute inset-0 flex items-center justify-center">
                         <a href="#tech-gallery" class="inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2 text-sm font-medium text-sky-700 shadow-sm transition hover:bg-white">
-                          <i class="fa-solid fa-gears text-xs"></i>
+                          <i class="fa fa-cogs text-xs"></i>
                           核心技术展厅入口
                         </a>
                       </div>
@@ -183,12 +199,12 @@
       </div>
     </section>
 
-    <!-- 核心技术展厅独立板块（关联仓库文档） -->
+    <!-- 核心技术展厅（修复样式+关联仓库文档） -->
     <section id="tech-gallery" class="py-20 bg-white/50">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="animate-fadeIn">
           <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm mb-8">
-            <i class="fa-solid fa-cogs text-xs"></i>
+            <i class="fa fa-cogs text-xs"></i>
             核心技术展厅 · 轨道交通核心技术解析
           </div>
           <h2 class="text-4xl font-semibold text-slate-950 mb-6">核心技术展厅</h2>
@@ -196,47 +212,47 @@
             聚焦轨道交通核心技术体系，涵盖车辆技术、轨道工程、信号系统、供电系统、运维技术等关键领域，
             以可视化、轻量化的方式解析轨道交通背后的技术逻辑与创新成果。点击卡片查看仓库完整文档。
           </p>
-          <!-- 技术分类卡片（关联你的GitHub仓库文档） -->
+          <!-- 技术卡片（修复布局+添加仓库文档链接） -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- 车辆核心技术卡片 → 关联仓库中「核心技术展厅.md」 -->
-            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+            <!-- 车辆核心技术卡片 → 关联你的GitHub仓库文档 -->
+            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md">
               <a href="https://github.com/moyian2004/railway-digital-museum/blob/main/核心技术展厅.md" class="card-link" target="_blank">
                 <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                  <i class="fa-solid fa-train text-sky-700 text-xl"></i>
+                  <i class="fa fa-train text-sky-700 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-medium text-slate-950 mb-2">车辆核心技术</h3>
                 <p class="text-slate-600 text-sm mb-4">
                   涵盖动车组牵引系统、制动系统、车体结构、转向架等核心部件技术原理与发展历程。
                 </p>
-                <i class="fa-solid fa-arrow-right link-icon"></i>
+                <i class="fa fa-arrow-right link-icon"></i>
               </a>
             </div>
 
-            <!-- 信号控制系统卡片 → 可后续补充文档路径，先保留结构 -->
-            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+            <!-- 信号控制系统卡片 → 关联你的GitHub仓库文档 -->
+            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md">
               <a href="https://github.com/moyian2004/railway-digital-museum/blob/main/核心技术展厅.md" class="card-link" target="_blank">
                 <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                  <i class="fa-solid fa-signal text-sky-700 text-xl"></i>
+                  <i class="fa fa-signal text-sky-700 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-medium text-slate-950 mb-2">信号控制系统</h3>
                 <p class="text-slate-600 text-sm mb-4">
                   解析CBTC、CTCS等信号系统原理，以及列车自动控制、调度指挥等核心技术逻辑。
                 </p>
-                <i class="fa-solid fa-arrow-right link-icon"></i>
+                <i class="fa fa-arrow-right link-icon"></i>
               </a>
             </div>
 
-            <!-- 供电系统技术卡片 → 可后续补充文档路径，先保留结构 -->
-            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+            <!-- 供电系统技术卡片 → 关联你的GitHub仓库文档 -->
+            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md">
               <a href="https://github.com/moyian2004/railway-digital-museum/blob/main/核心技术展厅.md" class="card-link" target="_blank">
                 <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                  <i class="fa-solid fa-bolt text-sky-700 text-xl"></i>
+                  <i class="fa fa-bolt text-sky-700 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-medium text-slate-950 mb-2">供电系统技术</h3>
                 <p class="text-slate-600 text-sm mb-4">
                   讲解接触网、牵引变电所、储能技术等轨道交通供电体系的核心技术与应用。
                 </p>
-                <i class="fa-solid fa-arrow-right link-icon"></i>
+                <i class="fa fa-arrow-right link-icon"></i>
               </a>
             </div>
           </div>
