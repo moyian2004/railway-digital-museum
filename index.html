@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="开源数字化轨道交通博物馆 - 融合数字展陈、知识可视化、公众科普与开源协作的轨道交通科普平台">
   <title>Open Rail Museum - 开源数字化轨道交通博物馆</title>
   <!-- 确保CDN资源加载稳定 -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com" defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <script>
@@ -24,7 +23,7 @@
   </script>
   <style>
     * { font-family: 'Inter', system-ui, sans-serif; }
-    html { scroll-behavior: smooth; scroll-padding-top: 80px; } /* 锚点跳转预留导航高度 */
+    html { scroll-behavior: smooth; }
     ::selection { background: #bae6fd; color: #0f172a; }
     .gradient-text {
       background: linear-gradient(to right, #0f172a, #0ea5e9, #2563eb);
@@ -37,17 +36,52 @@
       from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .animate-fadeIn { 
-      opacity: 0;
-      animation: fadeInUp 0.7s ease-out forwards; 
+    .animate-fadeIn { animation: fadeInUp 0.7s ease-out forwards; }
+    /* 技术卡片跳转样式（新增） */
+    .tech-card {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
-    /* 导航激活状态 */
-    .nav-link.active { color: #0284c7; font-weight: 600; }
+    .tech-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-top: 24px solid #0284c7;
+      border-left: 24px solid transparent;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .tech-card:hover::after {
+      opacity: 0.1;
+    }
+    .tech-card .card-link {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
+    }
+    .tech-card .link-icon {
+      margin-top: auto;
+      margin-left: auto;
+      color: #0284c7;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      transform: translateX(8px);
+    }
+    .tech-card:hover .link-icon {
+      opacity: 1;
+      transform: translateX(0);
+    }
   </style>
 </head>
 <body class="min-h-screen bg-[#f5f5f7] text-slate-900">
-  <!-- 修复背景渐变语法错误：from-f8fafc → from-slate-50 -->
-  <div class="fixed inset-0 -z-10 bg-gradient-to-b from-slate-50 to-f5f5f7 opacity-100"></div>
+  <!-- 背景装饰 -->
+  <div class="fixed inset-0 -z-10 bg-gradient-to-b from-f8fafc to-f5f5f7 opacity-100"></div>
 
   <!-- 头部导航 -->
   <header class="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">
@@ -62,12 +96,12 @@
         </div>
       </div>
       <nav class="hidden items-center gap-6 text-sm text-slate-600 lg:flex">
-        <a href="#overview" class="nav-link transition hover:text-slate-950">项目概览</a>
-        <a href="#timeline" class="nav-link transition hover:text-slate-950">叙事时间轴</a>
-        <a href="#galleries" class="nav-link transition hover:text-slate-950">数字展区</a>
-        <a href="#tech-gallery" class="nav-link transition font-medium text-sky-600">核心技术展厅</a>
-        <a href="#opensource" class="nav-link transition hover:text-slate-950">开源共建</a>
-        <a href="#vision" class="nav-link transition hover:text-slate-950">项目愿景</a>
+        <a href="#overview" class="transition hover:text-slate-950">项目概览</a>
+        <a href="#timeline" class="transition hover:text-slate-950">叙事时间轴</a>
+        <a href="#galleries" class="transition hover:text-slate-950">数字展区</a>
+        <a href="#tech-gallery" class="transition font-medium text-sky-600">核心技术展厅</a>
+        <a href="#opensource" class="transition hover:text-slate-950">开源共建</a>
+        <a href="#vision" class="transition hover:text-slate-950">项目愿景</a>
       </nav>
       <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
         联系项目
@@ -98,7 +132,7 @@
               开始展馆导览
               <i class="fa-solid fa-arrow-right text-xs transition group-hover:translate-x-0.5"></i>
             </a>
-            <!-- 核心技术展厅快捷入口（关联锚点） -->
+            <!-- 核心技术展厅快捷入口 -->
             <a href="#tech-gallery" class="inline-flex items-center gap-2 rounded-full bg-sky-600 px-6 py-3.5 text-sm text-white shadow-sm transition hover:bg-sky-700">
               核心技术展厅
               <i class="fa-solid fa-microchip text-sm"></i>
@@ -134,7 +168,6 @@
                   <div class="mt-8">
                     <div class="relative h-28 w-full overflow-hidden rounded-[1.75rem] border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50">
                       <div class="absolute inset-0 flex items-center justify-center">
-                        <!-- 核心技术展厅入口按钮（关联锚点） -->
                         <a href="#tech-gallery" class="inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2 text-sm font-medium text-sky-700 shadow-sm transition hover:bg-white">
                           <i class="fa-solid fa-gears text-xs"></i>
                           核心技术展厅入口
@@ -150,100 +183,7 @@
       </div>
     </section>
 
-    <!-- 1. 项目概览（补充锚点对应板块） -->
-    <section id="overview" class="py-20 bg-white/50">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="animate-fadeIn">
-          <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm mb-8">
-            <i class="fa-solid fa-info-circle text-xs"></i>
-            项目概览 · 关于开源轨道交通博物馆
-          </div>
-          <h2 class="text-4xl font-semibold text-slate-950 mb-6">项目概览</h2>
-          <p class="text-lg text-slate-600 max-w-3xl mb-8">
-            开源数字化轨道交通博物馆是一个非盈利性的科普项目，旨在通过数字化手段，将轨道交通的专业知识以更易懂、更直观的方式呈现给公众。
-            项目整合了轨道交通领域的核心知识、历史发展、技术原理，打造一站式的数字科普平台。
-          </p>
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 class="text-xl font-medium text-slate-950 mb-3">项目核心目标</h3>
-            <ul class="space-y-2 text-slate-600">
-              <li class="flex items-start gap-2">
-                <i class="fa-solid fa-check-circle text-sky-600 mt-1"></i>
-                <span>普及轨道交通专业知识，降低行业认知门槛</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i class="fa-solid fa-check-circle text-sky-600 mt-1"></i>
-                <span>通过开源协作，汇聚行业智慧，持续迭代内容</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <i class="fa-solid fa-check-circle text-sky-600 mt-1"></i>
-                <span>打造沉浸式数字展陈体验，提升科普趣味性</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 2. 叙事时间轴（补充锚点对应板块） -->
-    <section id="timeline" class="py-20 bg-slate-50">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="animate-fadeIn">
-          <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm mb-8">
-            <i class="fa-solid fa-timeline text-xs"></i>
-            叙事时间轴 · 轨道交通发展历程
-          </div>
-          <h2 class="text-4xl font-semibold text-slate-950 mb-6">叙事时间轴</h2>
-          <p class="text-lg text-slate-600 max-w-3xl mb-8">
-            从蒸汽机车到高速动车组，从人工调度到智能控制，轨道交通的发展贯穿了工业革命到数字时代的全过程。
-            本时间轴梳理了轨道交通关键技术、重要事件、标志性成果的发展脉络。
-          </p>
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <p class="text-slate-600">
-              （可在此补充具体时间轴内容，如：1804年第一台蒸汽机车诞生 → 1964年日本新干线通车 → 2008年中国首条高铁京津城际运营 → 2023年CR450动车组研发成功等）
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. 数字展区（补充锚点对应板块） -->
-    <section id="galleries" class="py-20 bg-white/50">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="animate-fadeIn">
-          <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm mb-8">
-            <i class="fa-solid fa-images text-xs"></i>
-            数字展区 · 沉浸式知识体验
-          </div>
-          <h2 class="text-4xl font-semibold text-slate-950 mb-6">数字展区</h2>
-          <p class="text-lg text-slate-600 max-w-3xl mb-8">
-            数字展区包含轨道交通车辆馆、轨道工程馆、信号系统馆、历史文化馆等子展区，通过3D模型、交互演示、图文解析等方式，
-            让用户沉浸式了解轨道交通的方方面面。
-          </p>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-train-subway text-sky-700 text-xl"></i>
-              </div>
-              <h3 class="text-xl font-medium text-slate-950 mb-2">车辆数字馆</h3>
-              <p class="text-slate-600 text-sm">
-                展示不同类型轨道交通车辆的结构、原理、技术参数，支持360°全景查看关键部件。
-              </p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-map-signs text-sky-700 text-xl"></i>
-              </div>
-              <h3 class="text-xl font-medium text-slate-950 mb-2">线路数字馆</h3>
-              <p class="text-slate-600 text-sm">
-                梳理国内外经典轨道交通线路的设计、建设、运营逻辑，展示线路规划的核心思路。
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. 核心技术展厅（强化内容，补充更多技术卡片） -->
+    <!-- 核心技术展厅独立板块（关联仓库文档） -->
     <section id="tech-gallery" class="py-20 bg-white/50">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="animate-fadeIn">
@@ -254,162 +194,55 @@
           <h2 class="text-4xl font-semibold text-slate-950 mb-6">核心技术展厅</h2>
           <p class="text-lg text-slate-600 max-w-3xl mb-12">
             聚焦轨道交通核心技术体系，涵盖车辆技术、轨道工程、信号系统、供电系统、运维技术等关键领域，
-            以可视化、轻量化的方式解析轨道交通背后的技术逻辑与创新成果。
+            以可视化、轻量化的方式解析轨道交通背后的技术逻辑与创新成果。点击卡片查看仓库完整文档。
           </p>
-          <!-- 技术分类卡片（补充轨道工程、运维技术） -->
+          <!-- 技术分类卡片（关联仓库文档） -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-train text-sky-700 text-xl"></i>
-              </div>
-              <h3 class="text-xl font-medium text-slate-950 mb-2">车辆核心技术</h3>
-              <p class="text-slate-600 text-sm">
-                涵盖动车组牵引系统、制动系统、车体结构、转向架等核心部件技术原理与发展历程。
-              </p>
+            <!-- 车辆核心技术卡片 → 关联仓库文档 -->
+            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+              <a href="./docs/车辆核心技术.md" class="card-link" target="_blank">
+                <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-train text-sky-700 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-medium text-slate-950 mb-2">车辆核心技术</h3>
+                <p class="text-slate-600 text-sm mb-4">
+                  涵盖动车组牵引系统、制动系统、车体结构、转向架等核心部件技术原理与发展历程。
+                </p>
+                <i class="fa-solid fa-arrow-right link-icon"></i>
+              </a>
             </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-signal text-sky-700 text-xl"></i>
-              </div>
-              <h3 class="text-xl font-medium text-slate-950 mb-2">信号控制系统</h3>
-              <p class="text-slate-600 text-sm">
-                解析CBTC、CTCS等信号系统原理，以及列车自动控制、调度指挥等核心技术逻辑。
-              </p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-bolt text-sky-700 text-xl"></i>
-              </div>
-              <h3 class="text-xl font-medium text-slate-950 mb-2">供电系统技术</h3>
-              <p class="text-slate-600 text-sm">
-                讲解接触网、牵引变电所、储能技术等轨道交通供电体系的核心技术与应用。
-              </p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-road-bridge text-sky-700 text-xl"></i>
-              </div>
-              <h3 class="text-xl font-medium text-slate-950 mb-2">轨道工程技术</h3>
-              <p class="text-slate-600 text-sm">
-                介绍无砟轨道、道岔、桥梁隧道等轨道工程核心技术，以及线路勘测设计方法。
-              </p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-wrench text-sky-700 text-xl"></i>
-              </div>
-              <h3 class="text-xl font-medium text-slate-950 mb-2">运维保障技术</h3>
-              <p class="text-slate-600 text-sm">
-                解析轨道交通智能运维、故障诊断、健康监测等技术，保障线路安全高效运行。
-              </p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-              <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
-                <i class="fa-solid fa-cloud text-sky-700 text-xl"></i>
-              </div>
-              <h3 class="text-xl font-medium text-slate-950 mb-2">智能调度技术</h3>
-              <p class="text-slate-600 text-sm">
-                讲解基于大数据、人工智能的轨道交通调度系统，实现运力最优、效率最大化。
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- 5. 开源共建（补充锚点对应板块） -->
-    <section id="opensource" class="py-20 bg-slate-50">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="animate-fadeIn">
-          <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm mb-8">
-            <i class="fa-brands fa-github text-xs"></i>
-            开源共建 · 一起完善数字博物馆
-          </div>
-          <h2 class="text-4xl font-semibold text-slate-950 mb-6">开源共建</h2>
-          <p class="text-lg text-slate-600 max-w-3xl mb-8">
-            本项目完全开源，欢迎行业专家、技术开发者、科普爱好者参与共建，无论是补充技术内容、优化界面体验，
-            还是修复问题、新增功能，都可以通过开源仓库提交贡献。
-          </p>
-          <a href="#" class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3.5 text-sm font-medium text-white shadow-lg transition hover:scale-[1.02]">
-            访问GitHub仓库
-            <i class="fa-brands fa-github text-xs"></i>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. 项目愿景（补充锚点对应板块） -->
-    <section id="vision" class="py-20 bg-white/50">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="animate-fadeIn">
-          <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm mb-8">
-            <i class="fa-solid fa-lightbulb text-xs"></i>
-            项目愿景 · 未来发展方向
-          </div>
-          <h2 class="text-4xl font-semibold text-slate-950 mb-6">项目愿景</h2>
-          <p class="text-lg text-slate-600 max-w-3xl mb-8">
-            我们希望将这个数字博物馆打造成国内最全面、最易懂的轨道交通科普平台，不仅覆盖专业知识，还能结合虚拟现实、
-            人工智能等技术，让更多人了解、热爱轨道交通行业，为行业科普和人才培养贡献力量。
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. 联系项目（补充锚点对应板块） -->
-    <section id="contact" class="py-20 bg-slate-50">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="animate-fadeIn">
-          <div class="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white/90 px-4 py-2 text-sm text-sky-700 shadow-sm mb-8">
-            <i class="fa-solid fa-envelope text-xs"></i>
-            联系我们 · 交流合作
-          </div>
-          <h2 class="text-4xl font-semibold text-slate-950 mb-6">联系项目</h2>
-          <p class="text-lg text-slate-600 max-w-3xl mb-8">
-            如您有合作建议、内容补充、技术支持等需求，可通过以下方式联系我们：
-          </p>
-          <div class="space-y-4">
-            <div class="flex items-center gap-3 text-slate-600">
-              <i class="fa-solid fa-envelope text-sky-600 w-6 text-center"></i>
-              <span>邮箱：contact@openrailmuseum.org</span>
+            <!-- 信号控制系统卡片 → 关联仓库文档 -->
+            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+              <a href="./docs/信号控制系统.md" class="card-link" target="_blank">
+                <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-signal text-sky-700 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-medium text-slate-950 mb-2">信号控制系统</h3>
+                <p class="text-slate-600 text-sm mb-4">
+                  解析CBTC、CTCS等信号系统原理，以及列车自动控制、调度指挥等核心技术逻辑。
+                </p>
+                <i class="fa-solid fa-arrow-right link-icon"></i>
+              </a>
             </div>
-            <div class="flex items-center gap-3 text-slate-600">
-              <i class="fa-solid fa-weixin text-sky-600 w-6 text-center"></i>
-              <span>微信：OpenRailMuseum</span>
+
+            <!-- 供电系统技术卡片 → 关联仓库文档 -->
+            <div class="tech-card rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+              <a href="./docs/供电系统技术.md" class="card-link" target="_blank">
+                <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-bolt text-sky-700 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-medium text-slate-950 mb-2">供电系统技术</h3>
+                <p class="text-slate-600 text-sm mb-4">
+                  讲解接触网、牵引变电所、储能技术等轨道交通供电体系的核心技术与应用。
+                </p>
+                <i class="fa-solid fa-arrow-right link-icon"></i>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </section>
   </main>
-
-  <!-- 新增导航激活状态脚本，滚动时自动高亮对应导航 -->
-  <script>
-    // 监听滚动，更新导航激活状态
-    window.addEventListener('scroll', function() {
-      const sections = document.querySelectorAll('section[id]');
-      const navLinks = document.querySelectorAll('.nav-link');
-      
-      let currentSection = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-        const sectionHeight = section.offsetHeight;
-        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-          currentSection = section.getAttribute('id');
-        }
-      });
-      
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${currentSection}`) {
-          link.classList.add('active');
-        }
-      });
-    });
-
-    // 页面加载时触发一次滚动监听，初始化导航状态
-    window.addEventListener('load', function() {
-      window.dispatchEvent(new Event('scroll'));
-    });
-  </script>
 </body>
 </html>
